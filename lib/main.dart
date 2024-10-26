@@ -14,7 +14,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> implements SipUaHelperListener {
   final SIPUAHelper _sipuaHelper = SIPUAHelper();
-
+  late RegistrationState _registerState;
 
   void login() async {
     final UaSettings uaSettings = UaSettings()
@@ -31,6 +31,8 @@ class _MyAppState extends State<MyApp> implements SipUaHelperListener {
   @override
   void initState() {
     super.initState();
+    _sipuaHelper.addSipUaHelperListener(this);
+    _registerState = _sipuaHelper.registerState;
     login();
   }
 
@@ -52,7 +54,7 @@ class _MyAppState extends State<MyApp> implements SipUaHelperListener {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Text(
-                'here',
+                EnumHelper.getName(_registerState.state),
               ),
             ],
           ),
@@ -83,7 +85,9 @@ class _MyAppState extends State<MyApp> implements SipUaHelperListener {
 
   @override
   void registrationStateChanged(RegistrationState state) {
-    // TODO: implement registrationStateChanged
+    setState(() {
+      _registerState = state;
+    });
   }
 
   @override
